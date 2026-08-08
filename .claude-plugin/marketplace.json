@@ -1,0 +1,14 @@
+{
+  "name": "school-admin",
+  "owner": {
+    "name": "학교 업무 자동화"
+  },
+  "plugins": [
+    {
+      "name": "jeongsan",
+      "source": "./",
+      "version": "0.1.0",
+      "description": "학교회계 목적사업비 정산 검증 — 기안·견적서 검산, 집행내역서 생성"
+    }
+  ]
+}

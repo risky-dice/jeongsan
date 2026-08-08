@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.venv/
+venv/
+.DS_Store
+# 실제 학교 문서는 절대 커밋하지 않는다
+/실제자료/
+*.hwp
+*.hwpx

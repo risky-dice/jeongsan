@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# jeongsan CLI 실행 래퍼.
+#
+# 플러그인으로 설치하면 이 bin/ 디렉터리가 PATH에 붙으므로
+# pip install 없이 `jeongsan ...` 이 바로 동작한다.
+# 저장소를 직접 클론한 경우에도 ./bin/jeongsan 으로 쓸 수 있다.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+# 이미 pip 로 설치돼 있으면 그쪽을 쓰고, 아니면 저장소 src/ 를 얹는다.
+if ! python3 -c "import jeongsan" >/dev/null 2>&1; then
+  export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
+fi
+
+exec python3 -m jeongsan.cli "$@"

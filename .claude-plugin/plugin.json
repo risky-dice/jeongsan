@@ -1,0 +1,9 @@
+{
+  "name": "jeongsan",
+  "displayName": "정산 검증 (학교회계 목적사업비)",
+  "version": "0.1.0",
+  "description": "재정 기안과 견적서를 넣으면 16개 결정론적 룰로 검산하고 집행내역서·검증 리포트·잔액 반납 기안 초안을 생성한다. 계산은 파이썬 엔진이 하고 LLM은 추출만 담당한다.",
+  "author": { "name": "학교 업무 자동화" },
+  "license": "MIT",
+  "keywords": ["korea", "school", "accounting", "정산", "학교회계", "목적사업비", "견적서", "감사"]
+}

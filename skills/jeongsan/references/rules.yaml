@@ -1,0 +1,33 @@
+# jeongsan 임계값 설정 예시
+#
+# 교육청 집행지침이 개정되면 **코드를 고치지 말고 이 파일만** 바꾼다.
+#   jeongsan check --project 사업.json --quote 견적서.txt --config rules.yaml
+#
+# 아래 값은 기본값과 동일하다. 필요한 항목만 남기고 지워도 된다.
+
+# ---- 계약방법 판정 (지방자치단체 계약 기준) ----
+single_quote_max: 20000000        # 1인 견적 수의계약 한도
+multi_quote_max: 100000000        # 2인 이상 견적제출 수의계약 한도 (초과 시 입찰)
+special_single_max: 50000000      # 여성·장애인·사회적경제기업 1인 견적 특례
+
+# ---- 낙찰하한율 (수의계약) ----
+lower_rate_under: 0.90            # 추정가격 2천만원 이하
+lower_rate_over: 0.88             # 추정가격 2천만원 초과
+lower_rate_books: 0.90            # 도서
+
+# ---- 세율 ----
+vat_rate: 0.10
+vat_rounding: floor               # floor(원단위 절사) / half_up / ceil
+
+# ---- 이상 징후 ----
+split_watch_days: 30              # 동일 업체 분할수의 의심 판정 기간
+
+# ---- 통계목 ----
+asset_unit_price_threshold: 500000  # 이 단가 초과 시 자산취득비 확인 경고
+
+# ---- 허용 오차 ----
+tolerance: 1                      # 원 단위 절사 등으로 생기는 허용 차액
+
+# ---- 신뢰도 임계값 ----
+conf_auto: 0.95                   # 이상이면 자동 확정
+conf_review: 0.70                 # 미만이면 수기 입력 필수

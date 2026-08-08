@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jeongsan"
+version = "0.1.0"
+description = "학교회계 목적사업비 정산 검증 엔진 — 기안·견적서를 넣으면 16개 룰로 검산하고 집행내역서를 만든다"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+keywords = ["korea", "school", "accounting", "settlement", "정산", "학교회계", "목적사업비"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Natural Language :: Korean",
+  "Topic :: Office/Business :: Financial :: Accounting",
+]
+dependencies = []
+
+[project.optional-dependencies]
+xlsx = ["openpyxl>=3.1"]
+yaml = ["pyyaml>=6.0"]
+all = ["openpyxl>=3.1", "pyyaml>=6.0"]
+dev = ["pytest>=7", "openpyxl>=3.1", "pyyaml>=6.0"]
+
+[project.scripts]
+jeongsan = "jeongsan.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["jeongsan*"]
+
+[tool.setuptools.package-data]
+jeongsan = ["data/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

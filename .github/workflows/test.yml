@@ -1,0 +1,32 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: python -m pytest -q
+      - name: CLI 스모크 테스트 (오류 케이스는 종료코드 1)
+        run: |
+          jeongsan rules
+          jeongsan bizno 214-88-01232
+          jeongsan check --project tests/fixtures/사업.json \
+                         --draft tests/fixtures/기안_정상.txt \
+                         --quote tests/fixtures/견적서_정상.txt \
+                         --line "검사·상담 자료 구입"
+          ! jeongsan check --project tests/fixtures/사업.json \
+                           --draft tests/fixtures/기안_오류.txt \
+                           --quote tests/fixtures/견적서_오류.txt \
+                           --line "검사·상담 자료 구입" --quiet
