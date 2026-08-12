@@ -83,6 +83,23 @@ def test_r01_passes_when_correct(project):
     assert sev(r, "R01") == OK
 
 
+def test_r01_passes_with_fractional_qty(project):
+    """2.5시간 × 20,000 = 50,000. 수량을 int로 자르면 허위 오류가 난다."""
+    q = make_quote(items=[Item("강사료", qty=2.5, unit_price=20_000, amount=50_000)],
+                   supply=50_000, vat=5_000, total=55_000)
+    r = validate(project, quote=q, line="자료 구입")
+    assert sev(r, "R01") == OK
+
+
+def test_r01_detail_shows_qty_unrounded(project):
+    """오류 메시지의 수량이 반올림되면 앞뒤가 안 맞는 문장이 된다."""
+    q = make_quote(items=[Item("강사료", qty=2.5, unit_price=20_000, amount=60_000)],
+                   supply=60_000, vat=6_000, total=66_000)
+    r = validate(project, quote=q, line="자료 구입")
+    assert sev(r, "R01") == ERROR
+    assert "2.5 × 20,000" in find(r, "R01")[0].detail
+
+
 def test_r02_items_sum_mismatch(project):
     q = make_quote(items=[Item("워크북", qty=10, unit_price=10_000, amount=100_000)],
                    supply=1_000_000)
@@ -141,6 +158,30 @@ def test_r07_line_budget_exceeded(project):
 def test_r07_unknown_line_warns(project):
     r = validate(project, make_draft(), line="없는 항목")
     assert sev(r, "R07") == WARNING
+
+
+def test_r07_warns_when_line_omitted():
+    """항목이 여럿이면 자동 선택이 안 된다. 조용히 빠지지 말고 알려야 한다."""
+    p = Project(name="다항목 사업", grant=10_000_000,
+                start=date(2026, 3, 1), end=date(2026, 11, 30),
+                lines=[BudgetLine("자료 구입", 5_000_000),
+                       BudgetLine("소모품", 2_000_000)])
+    r = validate(p, make_draft())
+    assert sev(r, "R07") == WARNING
+
+
+def test_r07_autoselects_single_line(project):
+    """항목이 하나뿐이면 자동 선택되므로 경고가 아니라 판정이 나와야 한다."""
+    r = validate(project, make_draft())
+    assert sev(r, "R07") == OK
+
+
+def test_r07_silent_when_project_has_no_lines():
+    """세부항목 예산 자체가 없는 사업이면 경고할 게 없다."""
+    p = Project(name="단일 항목 사업", grant=10_000_000,
+                start=date(2026, 3, 1), end=date(2026, 11, 30))
+    r = validate(p, make_draft())
+    assert find(r, "R07") == []
 
 
 def test_r08_asset_code_warning(project):

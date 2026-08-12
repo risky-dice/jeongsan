@@ -122,7 +122,7 @@ def r01_item_arithmetic(ctx: Context):
     bad = [i for i in q.items if abs(i.computed - i.amount) > tol]
     for i in bad:
         yield _f("R01", ERROR, f"품목 「{i.name}」 금액 불일치",
-                 f"{fm(round(i.qty))} × {fm(i.unit_price)} = {fm(i.computed)} "
+                 f"{i.qty:g} × {fm(i.unit_price)} = {fm(i.computed)} "
                  f"인데 견적서에는 {fm(i.amount)}",
                  item=i.name, computed=i.computed, stated=i.amount,
                  diff=i.amount - i.computed)
@@ -222,6 +222,11 @@ def r06_grant_limit(ctx: Context):
 def r07_line_limit(ctx: Context):
     p, name = ctx.project, ctx.line_name
     if not name:
+        # 조용히 건너뛰면 예산 초과 검증이 통째로 사라진 걸 아무도 모른다.
+        if p.lines:
+            yield _f("R07", WARNING, "세부항목 미지정 — 배정액 검증 생략",
+                     "--line 으로 세부항목명을 주면 배정액 초과까지 검증합니다.",
+                     lines=[ln.name for ln in p.lines])
         return
     allocated = p.line_allocated(name)
     if allocated is None:

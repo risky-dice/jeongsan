@@ -84,7 +84,9 @@ def _parse_item_rows(text: str) -> List[Item]:
         unit = ""
         if len(mid) >= 2 and len(mid[-1]) <= 4:
             unit = mid.pop()
-        qty, unit_price, amount = (t[1] or 0 for t in tail)
+        _, unit_price, amount = (t[1] or 0 for t in tail)
+        # 수량은 소수가 될 수 있다 (2.5시간, 1.5m). parse_money 는 int 라 못 쓴다.
+        qty = float(cols[tail[0][0]].replace(",", "").rstrip("원") or 0)
         items.append(Item(name=cols[0], spec=" ".join(mid), unit=unit,
                           qty=qty, unit_price=unit_price, amount=amount))
     return items

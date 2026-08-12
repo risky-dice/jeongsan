@@ -46,6 +46,16 @@ def test_quote_extraction():
     assert q.items_sum == 3_020_000
 
 
+def test_quote_extraction_keeps_fractional_qty():
+    q = quote_from_text(
+        "품명\t규격\t단위\t수량\t단가\t금액\n"
+        "집단상담 강사료\t외부강사\t시간\t2.5\t20,000\t50,000\n"
+        "워크북\tA4\t권\t30\t3,000\t90,000\n")
+    assert q.items[0].qty == 2.5
+    assert q.items[0].computed == 50_000     # 2로 잘리면 40,000 이 되어 R01 허위 오류
+    assert q.items[1].qty == 30
+
+
 def test_draft_extraction():
     d = draft_from_text(read("기안_정상.txt"))
     assert d.doc_no == "OO중학교-2026-0417"
