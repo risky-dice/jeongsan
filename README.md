@@ -164,11 +164,39 @@ result = validate(project, draft, quote)
   대체하지 않고, 결재 **전** 검산과 결재 **후** 정산서 작성을 담당한다.
 - 최종 확정과 결재는 사람이 한다. 산출물에 그 사실이 명시된다.
 
+## 학교 업무용 노트북에서 쓰기 (설치 권한 없이)
+
+핵심은 표준 라이브러리만 쓰므로 **파일 하나로 만들어 옮기면 끝난다.** pip 도 관리자 권한도
+필요 없다. 빌드는 개발 머신에서 한 번:
+
+```bash
+python3 -m zipapp src -m "jeongsan.cli:run" -o jeongsan.pyz
+```
+
+`jeongsan.pyz` (약 90KB) 를 사업 파일과 같이 USB나 메일로 옮기고, 학교 노트북에서:
+
+```
+python jeongsan.pyz check --project 사업.json --quote 견적서.txt --draft 기안.txt --html 리포트.html
+```
+
+윈도우에서 `python` 이 없다고 나오면 `py` 로 바꿔 본다. 파이썬 자체가 없으면 Microsoft Store
+버전이 관리자 권한 없이 설치된다.
+
+**한글 문서(.hwp/.hwpx)는 바로 못 읽는다.** 한글에서 *다른 이름으로 저장 → 텍스트 문서(\*.txt)*
+로 뽑거나, 전체 선택해서 메모장에 붙여넣고 저장한 뒤 그 txt 를 넘긴다. 표는 탭이 유지되면
+품목이 그대로 잡힌다.
+
+`--xlsx` 는 openpyxl 이 필요하다. pip 가 막힌 환경이면 `--html` 을 쓴다. HTML 리포트는
+표준 라이브러리만으로 만들어지고 브라우저에서 바로 인쇄된다.
+
+이 패키지에는 **네트워크 코드가 한 줄도 없다.** 학생 정보가 들어간 문서를 넣어도 노트북
+밖으로 나가지 않는다. 다만 그렇게 만든 txt·리포트 파일은 저장소에 커밋하지 말 것.
+
 ## 테스트
 
 ```bash
 pip install -e ".[dev]"
-pytest -q          # 97 passed
+pytest -q          # 103 passed
 ```
 
 룰을 추가할 때는 `rules.py` 에 `@rule("R17", "설명")` 데코레이터를 붙인 순수 함수를

@@ -11,3 +11,6 @@ venv/
 /실제자료/
 *.hwp
 *.hwpx
+
+# 배포용 단일 파일
+jeongsan.pyz

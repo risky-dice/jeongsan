@@ -174,5 +174,14 @@ def main(argv=None) -> int:
     return args.func(args)
 
 
+def run(argv=None):  # pragma: no cover
+    """종료코드까지 전달하는 진입점. zipapp(.pyz) 빌드가 이걸 가리킨다.
+
+    zipapp 이 만드는 __main__.py 는 main() 을 호출만 하고 반환값을 버려서
+    오류가 있어도 항상 0 으로 끝난다.
+    """
+    sys.exit(main(argv))
+
+
 if __name__ == "__main__":  # pragma: no cover
-    sys.exit(main())
+    run()
